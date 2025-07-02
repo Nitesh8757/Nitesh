@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Galactic Hacker Animation Portal</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0">
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(ellipse at center, #061727 0%, #000 100%);
+      font-family: 'Fira Mono', 'Consolas', 'monospace', 'Segoe UI', sans-serif;
+      color: #00ffea;
+      letter-spacing: 1.2px;
+      overflow-x: hidden;
+    }
+    .page {
+      min-height: 100vh;
+      width: 100vw;
+      position: relative;
+      overflow: visible;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+    #main-page {
+      z-index: 1;
+      position: relative;
+    }
+    #aboutus-page, #certificate-page, #games-page {
+      z-index: 2;
+      background: linear-gradient(135deg, #061727 80%, #03101e 100%);
+      border-top: 3px solid #00ffea66;
+      box-shadow: 0 -8px 40px #00ffea33;
+      position: relative;
+      width: 100vw;
+    }
+    .section-sep {
+      width: 100vw;
+      height: 30px;
+      background: repeating-linear-gradient(90deg, #00ffea 0 6px, #000 6px 36px);
+      margin: 0;
+      border: 0;
+      opacity: 0.15;
+      box-shadow: 0 0 12px #00ffea66;
+    }
+    #aboutus-content, #certificate-content, #games-content {
+      max-width: 700px;
+      margin: 60px auto 40px auto;
+      padding: 36px 24px 30px 24px;
+      background: rgba(13,40,55,0.95);
+      border-radius: 22px;
+      box-shadow: 0 0 40px #00ffea44;
+      text-align: center;
+    }
+    #aboutus-content h2, #certificate-content h2, #games-content h2 {
+      margin: 0 0 15px 0;
+      color: #00fff7;
+      letter-spacing: 2px;
+      font-size: 2em;
+      text-shadow: 0 0 12px #0ff7;
+    }
+    #aboutus-content p, #certificate-content p, #games-content p {
+      margin: 0 0 7px 0;
+      color: #00ffea;
+      opacity: 0.93;
+      font-size: 1.15em;
+      line-height: 1.7;
+    }
+    #aboutus-content b, #certificate-content b, #games-content b {
+      color: #fff;
+      text-shadow: 0 0 8px #00fff7;
+    }
+    #aboutus-content .about-logo, #certificate-content .cert-logo {
+      display: block;
+      margin: 0 auto 17px auto;
+      width: 110px;
+      filter: drop-shadow(0 0 18px #0ff6);
+    }
+    /* Certificate Style */
+    .certificate-box {
+      background: linear-gradient(120deg, #061727 80%, #00ffea33 100%);
+      border: 2.5px solid #00fff7;
+      border-radius: 16px;
+      margin: 30px auto;
+      padding: 28px 20px 24px 20px;
+      max-width: 500px;
+      box-shadow: 0 0 50px #00ffea55;
+      color: #fff;
+      text-shadow: 0 0 7px #00fff7cc;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      position: relative;
+      animation: cert-glow 2.4s infinite alternate;
+    }
+    @keyframes cert-glow {
+      0% { box-shadow: 0 0 50px #00ffea22; border-color: #00fff7; }
+      100% { box-shadow: 0 0 80px #00ffea88; border-color: #fff; }
+    }
+    .certificate-title {
+      font-size: 1.6em;
+      font-weight: bold;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+      color: #00fff7;
+      text-shadow: 0 0 10px #00ffea;
+    }
+    .certificate-name {
+      font-size: 1.25em;
+      color: #fff;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+    .certificate-details {
+      font-size: 1.07em;
+      margin-bottom: 12px;
+      color: #00ffea;
+      opacity: 0.93;
+    }
+    .certificate-issue {
+      font-size: 0.98em;
+      color: #00fff7;
+    }
+    .certificate-id {
+      position: absolute;
+      bottom: 10px;
+      right: 16px;
+      color: #00ffe4;
+      font-size: 0.83em;
+      opacity: 0.7;
+    }
+    /* Games styles */
+    .game-box {
+      margin: 30px auto 10px auto;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
+      gap: 40px 30px;
+    }
+    .mini-game {
+      background: #0f1a21cc;
+      border: 2px solid #00ffea;
+      border-radius: 13px;
+      box-shadow: 0 0 20px #00ffea44;
+      padding: 16px 20px;
+      min-width: 220px;
+      min-height: 120px;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 10px;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      transition: transform 0.18s, box-shadow 0.18s;
+      cursor: pointer;
+      position: relative;
+    }
+    .mini-game:hover {
+      box-shadow: 0 0 40px #00fff7cc;
+      transform: scale(1.04) rotate(-2deg);
+      background: #03101e;
+    }
+    .mini-game h3 {
+      margin: 0 0 6px 0;
+      color: #00fff7;
+      font-size: 1.1em;
+      letter-spacing: 1.2px;
+      text-shadow: 0 0 4px #00ffea;
+    }
+    /* Terminal, Matrix, Infinite Animations as before */
+    #matrix-rain {
+      position: fixed;
+      left: 0; top: 0;
+      width: 100vw; height: 100vh;
+      z-index: 50;
+      pointer-events: none;
+      mix-blend-mode: screen;
+    }
+    #hacker-terminal {
+      position: fixed;
+      left: 6vw; top: 5vh;
+      width: 88vw; max-width: 900px;
+      height: 43vh; max-height: 340px;
+      background: rgba(9,19,29,0.89);
+      border: 2px solid #0ff;
+      border-radius: 14px;
+      box-shadow: 0 0 40px #0ff8;
+      overflow: hidden;
+      z-index: 100;
+      pointer-events: auto;
+      color: #0ff;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+    }
+    #hacker-terminal .term-header {
+      padding: 7px 18px 3px 18px;
+      color: #00fff7;
+      font-size: 1.1em;
+      font-weight: bold;
+      letter-spacing: 1.8px;
+      text-shadow: 0 0 12px #0ff5;
+      border-bottom: 1px solid #00ffea66;
+      background: linear-gradient(90deg,#04202e,#0ff4, #04202e);
+    }
+    #terminal-content {
+      font-size: 1.02em;
+      padding: 12px 20px 10px 20px;
+      color: #00ffea;
+      min-height: 180px;
+      letter-spacing: 1.3px;
+      white-space: pre-wrap;
+      word-break: break-all;
+      overflow-y: auto;
+      font-family: 'Fira Mono', 'Consolas', monospace;
+      text-shadow: 0 0 8px #0ff4;
+    }
+    #container {
+      position: fixed;
+      width: 100vw;
+      height: 100vh;
+      left: 0; top: 0;
+      pointer-events: none;
+      z-index: 2;
+    }
+    .flying {
+      position: absolute;
+      pointer-events: auto;
+      opacity: 0.94;
+      will-change: transform;
+      z-index: 2;
+      animation-timing-function: linear;
+      filter: drop-shadow(0 0 8px #0ff6);
+      transition: filter 0.25s, transform 0.25s;
+      user-select: none;
+      cursor: pointer;
+    }
+    .flying:hover {
+      filter: drop-shadow(0 0 24px #fff) brightness(1.22);
+      z-index: 20;
+      transform: scale(1.28) rotate(-8deg) !important;
+      animation-play-state: paused !important;
+      border: 2.5px solid #fff;
+      background: linear-gradient(90deg, #fff, #0ff, #fff) !important;
+    }
+    .flying:active {
+      filter: drop-shadow(0 0 36px #fff) brightness(1.5);
+      transform: scale(1.4) rotate(0deg) !important;
+      background: #00ffea !important;
+      color: #000 !important;
+    }
+    .flying.button {
+      background: linear-gradient(90deg,#0ff,#0fa,#00c8ff,#0ff);
+      border: 2px solid #00ffea;
+      border-radius: 10px;
+      color: #001;
+      font-weight: bold;
+      font-size: 1.1em;
+      padding: 12px 36px;
+      text-shadow: 0 0 10px #0ff6;
+      box-shadow: 0 0 18px #0ff9;
+      letter-spacing: 2px;
+      cursor: pointer;
+    }
+    .flying.input, .flying.textarea {
+      border: 2px solid #00ffea;
+      border-radius: 10px;
+      padding: 8px 14px;
+      font-size: 1em;
+      background: #0f1a21aa;
+      color: #0ff;
+      box-shadow: 0 0 10px #0ff5;
+      outline: none;
+    }
+    .flying.img {
+      border-radius: 12px;
+      box-shadow: 0 0 30px #0ff6, 0 0 10px #020c;
+      filter: grayscale(0.5) brightness(1.2);
+    }
+    .flying.progress, .flying.meter {
+      width: 110px;
+      height: 20px;
+      accent-color: #0ff;
+      background: #0f1a21cc;
+      border-radius: 7px;
+      box-shadow: 0 0 8px #0ff4;
+    }
+    .flying.audio, .flying.video {
+      width: 140px;
+      height: 34px;
+      background: #0f1a21cc;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px #0ff5;
+      border: 1.5px solid #00ffea;
+    }
+    .flying.select {
+      background: #0f1a21cc;
+      color: #00ffea;
+      border-radius: 7px;
+      padding: 6px 14px;
+      font-size: 1em;
+      border: 2px solid #00ffea;
+      box-shadow: 0 0 8px #0ff6;
+    }
+    .flying.code {
+      background: #081a21cc;
+      color: #00ffe4;
+      padding: 10px 16px;
+      border-radius: 7px;
+      font-family: 'Fira Mono',monospace;
+      font-size: 1em;
+      box-shadow: 0 0 15px #0ff6;
+      border: 1.5px solid #00ffea;
+    }
+    .flying.svg {
+      background: transparent;
+    }
+    .flying.iframe {
+      border: 2.5px solid #00ffe4;
+      border-radius: 13px;
+      box-shadow: 0 0 22px #0ff7;
+    }
+    .flying.table {
+      background: #0f1a21cc;border-radius:10px;overflow:hidden;
+      box-shadow: 0 0 14px #0ff7;
+      border: 1.5px solid #00ffea;
+    }
+    .flying.canvas {
+      border: 2.5px solid #00ffea;
+      border-radius: 9px;
+      background: #02121d;
+      box-shadow: 0 0 18px #0ff7;
+    }
+    @keyframes fly1 {
+      from { transform: translateY(110vh) rotate(0deg) scale(1); }
+      to { transform: translateY(-30vh) rotate(360deg) scale(1.12); }
+    }
+    @keyframes fly2 {
+      from { transform: translateX(-20vw) translateY(100vh) scale(1); }
+      to { transform: translateX(120vw) translateY(-10vh) scale(0.8); }
+    }
+    @keyframes fly3 {
+      from { transform: translateY(110vh) scale(0.7) rotateY(0deg); }
+      to { transform: translateY(-30vh) scale(1.25) rotateY(360deg); }
+    }
+    @keyframes fly4 {
+      from { transform: translate(0,120vh) rotate(-90deg) scale(1.1);}
+      to { transform: translate(100vw,-20vh) rotate(270deg) scale(0.7);}
+    }
+    @keyframes fadeInOut {
+      0%{opacity:0;}
+      5%{opacity:1;}
+      90%{opacity:1;}
+      100%{opacity:0;}
+    }
+    #aboutus-content,
+    #certificate-content,
+    #games-content {
+      transition: box-shadow 0.35s, border 0.3s;
+      cursor: pointer;
+      border: 2px solid transparent;
+    }
+    #aboutus-content:hover,
+    #certificate-content:hover,
+    #games-content:hover {
+      box-shadow: 0 0 90px #00fff7cc, 0 0 44px #fff3;
+      border: 2px solid #00ffea;
+      background: rgba(13,40,55,1);
+      animation: aboutus-wiggle 0.55s linear 1;
+    }
+    @keyframes aboutus-wiggle {
+      0% { transform: scale(1) rotate(0deg);}
+      20%{ transform: scale(1.05) rotate(2deg);}
+      40%{ transform: scale(1.09) rotate(-2deg);}
+      60%{ transform: scale(1.11) rotate(2deg);}
+      80%{ transform: scale(1.07) rotate(-2deg);}
+      100%{ transform: scale(1) rotate(0deg);}
+    }
+    /* Contact */
+    #contact {
+      position: fixed;
+      bottom: 0; left: 0;
+      width: 100vw;
+      background: rgba(10,25,36,0.95);
+      border-top: 2px solid #00ffea;
+      color: #0ff;
+      padding: 18px 0 6px 0;
+      text-align: center;
+      font-size: 1.13em;
+      letter-spacing: 2px;
+      z-index: 1000;
+      box-shadow: 0 -1px 36px #00ffea44;
+      user-select: text;
+    }
+    #contact a {
+      color: #fff;
+      background: #00ffea;
+      padding: 5px 16px;
+      border-radius: 7px;
+      text-decoration: none;
+      font-weight: bold;
+      margin: 0 7px;
+      box-shadow: 0 0 8px #0ff7;
+      letter-spacing: 1.4px;
+      transition: background 0.15s, color 0.15s;
+    }
+    #contact a:hover {
+      background: #fff;
+      color: #00ffea;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="matrix-rain"></canvas>
+  <div id="hacker-terminal">
+    <div class="term-header">[ GALACTIC HACKER SHELL ]</div>
+    <div id="terminal-content"></div>
+  </div>
+  <div id="container"></div>
+
+  <!-- Main Page Section -->
+  <div class="page" id="main-page">
+    <div style="height:100vh;"></div>
+  </div>
+
+  <div class="section-sep"></div>
+
+  <!-- About Us Section -->
+  <div class="page" id="aboutus-page">
+    <div id="aboutus-content" tabindex="0" title="Click or hover for more!">
+      <img class="about-logo" src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/02/Eo_circle_blue-white_checkmark.svg/1024px-Eo_circle_blue-white_checkmark.svg.png" alt="Galactic Logo"/>
+      <h2>About Us</h2>
+      <p>
+        Welcome to the most powerful website in the galaxy!<br>
+        <b>Created by Nitesh Kumar</b> and the Galactic Hackers, we blend infinite HTML, cyber animations, and hacking spirit.<br>
+        Our mission: cosmic innovation, web mastery, and fun.<br>
+        <span style="color:#00fff7;font-weight:bold;">Explore. Hack. Dominate.</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="section-sep"></div>
+
+  <!-- Certificate Section -->
+  <div class="page" id="certificate-page">
+    <div id="certificate-content" tabindex="0" title="Click or hover for certificate animation!">
+      <img class="cert-logo" src="https://cdn-icons-png.flaticon.com/512/1828/1828884.png" alt="Certificate Logo"/>
+      <h2>Hacking Certificate</h2>
+      <div class="certificate-box">
+        <div class="certificate-title">Certificate of Elite Hacking</div>
+        <div class="certificate-name">Nitesh Kumar</div>
+        <div class="certificate-details">
+          has successfully completed the<br>
+          <b>Galactic Hacker Advanced Program</b><br>
+          with cosmic distinction and mastery of<br>
+          <span style="color:#00fff7;">Infinite HTML Animation</span>,<br>
+          Matrix Rain Effects, Quantum Cyber-Terminals,<br>
+          and more.
+        </div>
+        <div class="certificate-issue">
+          Issued: 2025-06-29 &mdash; Certificate ID: <b>GHACK-8757</b>
+        </div>
+        <div class="certificate-id">Signature: <b style="color:#fff;">Galactic Hackers</b></div>
+      </div>
+      <p>
+        <span style="color:#00fff7;">Show this certificate to any intergalactic recruiter!</span>
+      </p>
+    </div>
+  </div>
+
+  <div class="section-sep"></div>
+
+  <!-- Games Section -->
+  <div class="page" id="games-page">
+    <div id="games-content" tabindex="0" title="Click or hover for more!">
+      <h2>Hacker Mini-Games</h2>
+      <div class="game-box">
+        <!-- Game: Click the Code -->
+        <div class="mini-game" id="click-code-game">
+          <h3>Click the Code</h3>
+          <p>How many hacks in 10 seconds?</p>
+          <button onclick="startClickGame(this)">Start</button>
+          <div id="click-code-score" style="margin-top:6px;font-size:1.08em;"></div>
+        </div>
+        <!-- Game: Matrix Typing -->
+        <div class="mini-game" id="matrix-typing-game">
+          <h3>Matrix Typing</h3>
+          <p>Type the falling code!</p>
+          <button onclick="startTypingGame(this)">Start</button>
+          <div id="matrix-typing-area" style="margin-top:6px;font-size:1.08em;"></div>
+        </div>
+        <!-- Game: Guess the Port -->
+        <div class="mini-game" id="guess-port-game">
+          <h3>Guess The Port</h3>
+          <p>Guess the open port (1024-65535)!</p>
+          <button onclick="startPortGame(this)">Start</button>
+          <div id="guess-port-area" style="margin-top:6px;font-size:1.08em;"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="contact">
+    <span>Contact the Galactic Hackers:</span>
+    <a href="mailto:hackers@galaxy.com">Email</a>
+    <a href="https://t.me/galactic_hackers" target="_blank">Telegram</a>
+    <a href="https://twitter.com/galactic_hackers" target="_blank">Twitter/X</a>
+    &nbsp;|&nbsp; 
+    <span>&copy; 2025 The Most Powerful Website in the Galaxy</span>
+  </div>
+  <script>
+    // --- Matrix rain animation ---
+    const canvas = document.getElementById('matrix-rain');
+    const ctx = canvas.getContext('2d');
+    function resizeMatrix() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeMatrix();
+    window.addEventListener('resize', resizeMatrix);
+
+    const matrixChars = 'アァカサタナハマヤャラワガザダバパイィキシチニヒミリヰギジヂビピウゥクスツヌフムユュルグズヅブプエェケセテネヘメレヱゲゼデベペオォコソトノホモヨョロヲゴゾドボポヴ0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ$%#@&*';
+    const fontSize = 20;
+    let columns = Math.floor(window.innerWidth / fontSize);
+    let drops = Array(columns).fill(1);
+
+    function drawMatrix() {
+      ctx.fillStyle = "rgba(0,10,18,0.20)";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.font = fontSize + "px Fira Mono, monospace";
+      for(let i=0; i<drops.length; i++){
+        let text = matrixChars[Math.floor(Math.random()*matrixChars.length)];
+        ctx.fillStyle = "#00ffe4";
+        ctx.shadowColor = "#00ffea";
+        ctx.shadowBlur = 14;
+        ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+        ctx.shadowBlur = 0;
+        if(drops[i]*fontSize > canvas.height && Math.random() > 0.972)
+          drops[i]=0;
+        drops[i]++;
+      }
+    }
+    setInterval(drawMatrix, 50);
+
+    // --- Auto-writing hacker terminal animation ---
+    const terminalLines = [
+      "[*] Initializing Galactic Uplink...",
+      "[*] Scanning cosmic ports: 1337, 31337, 8080, 666...",
+      "[*] Bypassing nebula firewalls [OK]",
+      "[*] Injecting quantum payload....",
+      "[*] Establishing wormhole connection...",
+      "[*] Hacking the Multiverse Mainframe...",
+      "[*] Downloading Starfleet credentials...",
+      "[*] Uploading rainbow worms to blackhole servers...",
+      "[*] Access GRANTED: Welcome, Galactic Hacker!",
+      "Nitesh kumar",
+      "root@galaxy:/# _"
+    ];
+    let terminalPos = 0;
+    let charPos = 0;
+    const terminal = document.getElementById('terminal-content');
+    let currentLine = '';
+    function writeTerminalLine() {
+      if (terminalPos >= terminalLines.length) {
+        setTimeout(() => {
+          terminal.innerHTML = '';
+          terminalPos = 0;
+          charPos = 0;
+          currentLine = '';
+          setTimeout(writeTerminalLine, 800);
+        }, 3400);
+        return;
+      }
+      let line = terminalLines[terminalPos];
+      if (charPos < line.length) {
+        currentLine += line[charPos];
+        terminal.innerHTML = terminal.innerHTML.replace(/_$/, '') + line[charPos] + '_';
+        charPos++;
+        setTimeout(writeTerminalLine, Math.random()*35+18);
+      } else {
+        terminal.innerHTML = terminal.innerHTML.replace(/_$/, '') + '<br/>';
+        terminal.scrollTop = terminal.scrollHeight;
+        currentLine = '';
+        charPos = 0;
+        terminalPos++;
+        setTimeout(writeTerminalLine, Math.random()*450+600);
+      }
+    }
+    setTimeout(writeTerminalLine, 700);
+
+    // --- Infinite flying elements (hacker style) ---
+    const highLevelHTML = [
+      () => {
+        const btn = document.createElement('button');
+        btn.className = 'button';
+        btn.textContent = ['BREACH','RUN','UPLOAD','OVERRIDE','💾 SAVE','🔓 UNLOCK'][Math.floor(Math.random()*6)];
+        btn.onclick = () => btn.textContent = '✔️';
+        return btn;
+      },
+      () => {
+        const input = document.createElement('input');
+        input.className = 'input';
+        input.placeholder = ['root@galaxy:~$','Enter passphrase','Search...','0xDEADBEEF'][Math.floor(Math.random()*4)];
+        return input;
+      },
+      () => {
+        const textarea = document.createElement('textarea');
+        textarea.className = 'textarea';
+        textarea.rows = 2;
+        textarea.cols = 18;
+        textarea.placeholder = 'Type your exploit...';
+        return textarea;
+      },
+      () => {
+        const img = document.createElement('img');
+        img.className = 'img';
+        img.src = `https://robohash.org/${Math.random().toString(36).slice(2,8)}?set=set3&bgset=bg2&size=90x70`;
+        img.width = 90;
+        img.height = 70;
+        img.alt = "Robo Hacker";
+        return img;
+      },
+      () => {
+        const h = document.createElement(`h${Math.floor(Math.random()*4)+1}`);
+        h.textContent = [
+          'ACCESS GRANTED',
+          'HACKING...',
+          'GALACTIC SHELL',
+          'QUANTUM BREACH',
+          '💀 SYSTEM ROOT'
+        ][Math.floor(Math.random()*5)];
+        h.style.color = `hsl(${Math.floor(Math.random()*360)},85%,70%)`;
+        h.style.textShadow = '0 0 18px #0ff6';
+        return h;
+      },
+      () => {
+        const p = document.createElement('p');
+        p.textContent = [
+          'Data block: '+Math.random().toString(36).slice(2,12),
+          '0x'+(~~(Math.random()*1e16)).toString(16).toUpperCase(),
+          '🌌 Quantum flux detected',
+          ':: Running script.sh ::',
+          '>>> SYSTEM BREACHED <<<'
+        ][Math.floor(Math.random()*5)];
+        p.style.background = 'rgba(0,255,234,0.09)';
+        p.style.padding = '6px 18px';
+        p.style.borderRadius = '6px';
+        p.style.fontWeight = 'bold';
+        return p;
+      },
+      () => {
+        const ul = document.createElement('ul');
+        for(let i=0; i<3; i++) {
+          const li = document.createElement('li');
+          li.textContent = [
+            'Exploit '+(Math.floor(Math.random()*10000)),
+            '0x'+(~~(Math.random()*1e12)).toString(16).toUpperCase(),
+            'Port '+(Math.floor(Math.random()*65000))
+          ][Math.floor(Math.random()*3)];
+          ul.appendChild(li);
+        }
+        ul.style.background = '#00ffea15';
+        ul.style.borderRadius = '8px';
+        ul.style.padding = '7px 18px';
+        ul.style.color = '#0ff';
+        return ul;
+      },
+      () => {
+        const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+        svg.classList.add('svg');
+        svg.setAttribute('width', 60);
+        svg.setAttribute('height', 60);
+        svg.innerHTML = `<circle cx="30" cy="30" r="24" fill="#0ff" opacity="0.23"/><rect x="14" y="14" width="32" height="8" fill="#0ff"/><rect x="14" y="38" width="32" height="8" fill="#0ff"/>`;
+        return svg;
+      },
+      () => {
+        const progress = document.createElement('progress');
+        progress.className = 'progress';
+        progress.max = 100;
+        progress.value = Math.floor(Math.random()*100);
+        return progress;
+      },
+      () => {
+        const audio = document.createElement('audio');
+        audio.className = 'audio';
+        audio.controls = true;
+        audio.src = 'https://www.w3schools.com/html/horse.mp3';
+        return audio;
+      },
+      () => {
+        const video = document.createElement('video');
+        video.className = 'video';
+        video.controls = true;
+        video.width = 130;
+        video.height = 30;
+        video.src = 'https://www.w3schools.com/html/movie.mp4';
+        return video;
+      },
+      () => {
+        const select = document.createElement('select');
+        select.className = 'select';
+        for(let i=0; i<3; i++) {
+          const option = document.createElement('option');
+          option.value = i;
+          option.textContent = ['Shell','Root','Quantum'][i];
+          select.appendChild(option);
+        }
+        return select;
+      },
+      () => {
+        const code = document.createElement('pre');
+        code.className = 'code';
+        code.textContent = [
+          "sudo rm -rf / --no-preserve-root",
+          "ssh root@milkyway --port 31337",
+          "for (;;) { hack(); }"
+        ][Math.floor(Math.random()*3)];
+        return code;
+      },
+      () => {
+        const blockq = document.createElement('blockquote');
+        blockq.textContent = [
+          '“The only secure system is unplugged.”',
+          '“Glitch in the galaxy.”',
+          '“Root is not enough.”'
+        ][Math.floor(Math.random()*3)];
+        blockq.style.fontStyle = 'italic';
+        blockq.style.background = 'rgba(0,255,234,0.08)';
+        blockq.style.padding = '10px 14px';
+        blockq.style.borderLeft = '4px solid #0ff';
+        return blockq;
+      },
+      () => {
+        const meter = document.createElement('meter');
+        meter.className = 'meter';
+        meter.min = 0; meter.max = 10;
+        meter.value = Math.floor(Math.random()*10);
+        meter.style.width = '90px';
+        return meter;
+      },
+      () => {
+        const time = document.createElement('time');
+        time.dateTime = new Date().toISOString();
+        time.textContent = new Date().toLocaleTimeString();
+        time.style.fontWeight = 'bold';
+        return time;
+      },
+      () => {
+        const iframe = document.createElement('iframe');
+        iframe.className = 'iframe';
+        iframe.width = 112;
+        iframe.height = 70;
+        iframe.src = 'https://cybermap.kaspersky.com/en/widget/dynamic/dark';
+        iframe.title = "Cyber Map";
+        iframe.loading = "lazy";
+        return iframe;
+      },
+      () => {
+        const table = document.createElement('table');
+        table.className = "table";
+        for(let r=0;r<2;r++) {
+          const tr = document.createElement('tr');
+          for(let c=0;c<2;c++) {
+            const td = document.createElement('td');
+            td.textContent = ['👾','💾','🛰️','🔒','🛸','💻','🦠','🕶️'][Math.floor(Math.random()*8)];
+            td.style.padding='8px 16px';
+            td.style.fontSize='1.3em';
+            tr.appendChild(td);
+          }
+          table.appendChild(tr);
+        }
+        return table;
+      },
+      () => {
+        const canvas = document.createElement('canvas');
+        canvas.className = 'canvas';
+        canvas.width = 60;
+        canvas.height = 40;
+        const ctx2 = canvas.getContext('2d');
+        ctx2.fillStyle = "#0ff";
+        ctx2.globalAlpha = 0.33;
+        ctx2.beginPath();
+        ctx2.arc(30,20,17,0,Math.PI*2); ctx2.fill();
+        ctx2.globalAlpha = 1;
+        ctx2.strokeStyle = "#0ff";
+        ctx2.lineWidth = 2.5;
+        ctx2.beginPath();
+        ctx2.moveTo(10,32); ctx2.lineTo(50,32); ctx2.stroke();
+        return canvas;
+      },
+      () => {
+        const math = document.createElementNS('http://www.w3.org/1998/Math/MathML','math');
+        math.innerHTML='<msup><mi>h</mi><mn>4</mn></msup><mo>+</mo><msup><mi>a</mi><mn>2</mn></msup><mo>=</mo><msup><mi>c</mi><mn>2</mn></msup>';
+        math.style.fontSize = '1.3em';
+        math.style.background = '#0ff4';
+        math.style.borderRadius = '7px';
+        return math;
+      }
+    ];
+    const anims = [
+      { name: 'fly1', duration: () => (Math.random()*7+7)+'s', delay: () => (Math.random()*4)+'s' },
+      { name: 'fly2', duration: () => (Math.random()*9+5)+'s', delay: () => (Math.random()*4)+'s' },
+      { name: 'fly3', duration: () => (Math.random()*8+6)+'s', delay: () => (Math.random()*4)+'s' },
+      { name: 'fly4', duration: () => (Math.random()*10+4)+'s', delay: () => (Math.random()*4)+'s' }
+    ];
+    function addFlyingElement() {
+      const el = highLevelHTML[Math.floor(Math.random()*highLevelHTML.length)]();
+      el.classList.add('flying');
+      const left = Math.random() * 94;
+      const size = Math.random()*0.8 + 0.67;
+      el.style.left = `${left}%`;
+      el.style.top = '100vh';
+      el.style.transform = `scale(${size})`;
+      el.style.zIndex = Math.floor(Math.random()*5)+1;
+      const anim = anims[Math.floor(Math.random()*anims.length)];
+      el.style.animationName = anim.name + ', fadeInOut';
+      el.style.animationDuration = anim.duration() + `, ${Math.random()*10+8}s`;
+      el.style.animationDelay = anim.delay() + ',0s';
+      el.style.animationFillMode = 'forwards';
+      el.addEventListener('mouseover', () => {
+        for(let i=0; i<3; i++) addFlyingElement();
+      });
+      el.addEventListener('click', (e) => {
+        if (e.target.closest('#aboutus-page') || e.target.closest('#aboutus-content')) {
+          for(let i=0; i<8; i++) addFlyingElement();
+        } else {
+          for(let i=0; i<5; i++) addFlyingElement();
+        }
+      });
+      el.addEventListener('animationend', () => el.remove());
+      document.getElementById('container').appendChild(el);
+    }
+    setInterval(() => {
+      for(let i=0; i<Math.floor(Math.random()*3)+3; i++) addFlyingElement();
+    }, 700);
+    document.getElementById('container').addEventListener('click', e => {
+      for(let i=0; i<14; i++) addFlyingElement();
+    });
+    for(let i=0;i<22;i++) addFlyingElement();
+
+    // About Us, Certificate, Games infinite burst on click/hover
+    ['aboutus-content','certificate-content','games-content'].forEach(id=>{
+      let el = document.getElementById(id);
+      el.addEventListener('mouseenter', () => {
+        for(let i=0; i<6; i++) addFlyingElement();
+      });
+      el.addEventListener('click', () => {
+        for(let i=0; i<12; i++) addFlyingElement();
+      });
+    });
+
+    // --- Mini-games logic ---
+    // 1. Click the Code game
+    let clickGameActive = false, clickGameScore = 0, clickGameTimeout;
+    function startClickGame(btn) {
+      if (clickGameActive) return;
+      clickGameActive = true;
+      clickGameScore = 0;
+      document.getElementById('click-code-score').innerHTML = `<b>Score: 0</b>`;
+      btn.disabled = true;
+      const handler = () => {
+        if (!clickGameActive) return;
+        clickGameScore++;
+        document.getElementById('click-code-score').innerHTML = `<b>Score: ${clickGameScore}</b>`;
+      };
+      document.getElementById('click-code-score').onclick = handler;
+      clickGameTimeout = setTimeout(() => {
+        clickGameActive = false;
+        btn.disabled = false;
+        document.getElementById('click-code-score').innerHTML = `<b>Final Score: ${clickGameScore}</b>`;
+        document.getElementById('click-code-score').onclick = null;
+      }, 10000);
+    }
+    // 2. Matrix Typing Game
+    let typingGameActive = false, typingWord = '', typingScore = 0, typingTimeout;
+    function startTypingGame(btn) {
+      if (typingGameActive) return;
+      typingGameActive = true; typingScore = 0;
+      let area = document.getElementById('matrix-typing-area');
+      btn.disabled = true;
+      function showWord() {
+        if (!typingGameActive) return;
+        typingWord = Math.random().toString(36).slice(2,7+Math.floor(Math.random()*3));
+        area.innerHTML = `<b style="font-size:1.25em">${typingWord}</b><br><input id="typetxt" autocomplete="off" style="font-size:1.1em;margin-top:6px;" autofocus>`;
+        let inp = document.getElementById('typetxt');
+        inp.focus();
+        inp.oninput = function() {
+          if (inp.value.trim() === typingWord) {
+            typingScore++;
+            showWord();
+          }
+        };
+      }
+      showWord();
+      typingTimeout = setTimeout(() => {
+        typingGameActive = false;
+        btn.disabled = false;
+        area.innerHTML = `<b>Final Score: ${typingScore}</b>`;
+      }, 13000);
+    }
+    // 3. Guess the Port Game
+    let portGameActive = false, portNumber = 0, portGuesses = 0;
+    function startPortGame(btn) {
+      if (portGameActive) return;
+      portGameActive = true; portGuesses = 0;
+      portNumber = Math.floor(Math.random()*64512)+1024;
+      let area = document.getElementById('guess-port-area');
+      btn.disabled = true;
+      area.innerHTML = `<input id="portguess" placeholder="Port?" style="font-size:1.1em;width:80px;"> <button id="portgobtn">Go</button><br><span id="porthint" style="font-size:0.98em;"></span>`;
+      document.getElementById('portgobtn').onclick = function() {
+        let guess = parseInt(document.getElementById('portguess').value,10);
+        portGuesses++;
+        if (guess === portNumber) {
+          area.innerHTML = `<b>You hacked the port in ${portGuesses} tries!</b>`;
+          btn.disabled = false;
+          portGameActive = false;
+        } else if (guess < portNumber) {
+          document.getElementById('porthint').textContent = 'Higher!';
+        } else if (guess > portNumber) {
+          document.getElementById('porthint').textContent = 'Lower!';
+        }
+      };
+    }
+  </script>
+</body>
+</html>
