@@ -1,23 +1,118 @@
-<!doctype html>
-<html>
-  <head>
-    <title>Owner page </title>
-  </head>
-  <body>
-<h1 align="center">Hi 👋, I'm Nitesh</h1>
-<h3 align="center">A passionate developer & lifelong learner</h3>
-- 🌱 I’m currently learning **new technologies and frameworks**<br>
-- 👯 I’m looking to collaborate on **open source projects**<br>
-- 💬 Ask me about **web development, JavaScript, or any tech topic**<br>
-- ⚡ Fun fact: **I believe in the power of code and coffee ☕**<br>
-<h3 align="left">Connect with me:</
-<h3 align="left">Languages and Tools:</h3>
-    <img src="C.png" height="200px" width="200px">
-    <img src="c+.png" height="200px" width="200px">
-    <img src="Js.png" height="200px" width="200px">
-    <img src="css.png" height="200px" width="200px">
-    <img src="html.png" height="200px" width="200px">
-  </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The Immortal Owner Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@900&display=swap');
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #0f2027, #2c5364, #1c92d2, #f2fcfe);
+            min-height: 100vh;
+            font-family: 'Roboto', sans-serif;
+            color: #fff;
+        }
+        .immortal-banner {
+            background: linear-gradient(90deg, #ff512f 0%, #dd2476 100%);
+            box-shadow: 0 4px 24px #2228;
+            padding: 40px 0 30px 0;
+            text-align: center;
+        }
+        .immortal-title {
+            font-size: 3.5rem;
+            letter-spacing: 2px;
+            margin: 0;
+            text-shadow: 0 2px 14px #0008;
+            animation: immortalGlow 2s infinite alternate;
+        }
+        @keyframes immortalGlow {
+            0% { text-shadow: 0 2px 14px #0008, 0 0 30px #fff6; }
+            100% { text-shadow: 0 4px 24px #ff512f, 0 0 60px #dd2476; }
+        }
+        .subtitle {
+            font-size: 1.5rem;
+            letter-spacing: 1.5px;
+            margin-top: 18px;
+            margin-bottom: 0;
+            font-style: italic;
+            color: #f2fcfe;
+            text-shadow: 0 1px 10px #2c5364aa;
+        }
+        .owner-info {
+            margin: 60px auto 0 auto;
+            max-width: 680px;
+            background: rgba(44,83,100,0.75);
+            border-radius: 24px;
+            padding: 36px 36px 24px 36px;
+            box-shadow: 0 8px 40px #0f202755;
+            text-align: center;
+        }
+        .owner-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 6px solid #ff512f;
+            box-shadow: 0 0 32px #dd2476aa;
+            margin-bottom: 22px;
+            background: #fff;
+        }
+        .owner-name {
+            font-size: 2.2rem;
+            margin-bottom: 6px;
+            color: #ff512f;
+        }
+        .immortal-quote {
+            font-size: 1.25rem;
+            background: linear-gradient(90deg, #dd2476cc, #ff512fcc);
+            color: #fff;
+            padding: 18px 28px;
+            border-radius: 14px;
+            box-shadow: 0 2px 16px #ff512f44;
+            display: inline-block;
+            margin-top: 18px;
+        }
+        .legendary-statement {
+            font-size: 1.45rem;
+            margin-top: 40px;
+            color: #0ff;
+            letter-spacing: 1.2px;
+            text-shadow: 0 2px 24px #1c92d2;
+        }
+        .crown {
+            font-size: 2rem;
+            vertical-align: middle;
+            animation: bounce 1.5s infinite;
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0);}
+            50% { transform: translateY(-12px);}
+        }
+        @media (max-width: 600px) {
+            .immortal-title { font-size: 2.1rem; }
+            .owner-info { padding: 18px 6px; }
+            .owner-name { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="immortal-banner">
+        <span class="crown">👑</span>
+        <h1 class="immortal-title">Owner: The Immortal Page</h1>
+        <p class="subtitle">This is the immortal page of the world. Iske samne koi page takar na de!</p>
+    </div>
+    <div class="owner-info">
+        <img src="https://avatars.githubusercontent.com/u/9919?s=400&v=4" alt="Owner Photo" class="owner-photo">
+        <div class="owner-name">Nitesh8757</div>
+        <div class="immortal-quote">
+            "In the world of web pages, this is the immortal one.<br>
+            <b>Koi page takar na de!</b>"
+        </div>
+        <div class="legendary-statement">
+            🏆 Legendary. Unbeatable. Forever.
+        </div>
+    </div>
+</body>
 </html>
-
-
