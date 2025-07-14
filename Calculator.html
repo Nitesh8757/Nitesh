@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Neon Calculator</title>
+  <style>
+    body {
+      background: linear-gradient(90deg, #0f2027 0%, #2c5364 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .calculator {
+      background: #181818;
+      border-radius: 20px;
+      box-shadow: 0 0 40px #00ffea66, 0 4px 32px #000c;
+      padding: 28px 24px;
+      width: 300px;
+    }
+    .display {
+      width: 100%;
+      height: 50px;
+      border: none;
+      background: #222;
+      color: #00ffe7;
+      font-size: 2em;
+      text-align: right;
+      border-radius: 12px;
+      margin-bottom: 22px;
+      padding: 7px 14px;
+      box-sizing: border-box;
+      outline: none;
+      box-shadow: 0 2px 8px #00ffe73a;
+    }
+    .buttons {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+    }
+    button {
+      padding: 20px;
+      font-size: 1.25em;
+      border: none;
+      border-radius: 10px;
+      background: #252525;
+      color: #fff;
+      cursor: pointer;
+      transition: box-shadow 0.2s, color 0.2s;
+      box-shadow: 0 0 2px #00ffe7, 0 2px 8px #0004;
+    }
+    button.operator { background: #00b4d8; color: #fff; }
+    button.equals { background: #ff206e; color: #fff; grid-column: span 2; }
+    button.clear { background: #fffb00; color: #222; }
+    button:active { box-shadow: 0 0 8px #00ffe7, 0 2px 16px #00ffe7; }
+  </style>
+</head>
+<body>
+  <div class="calculator">
+    <input type="text" class="display" id="display" disabled>
+    <div class="buttons">
+      <button onclick="append('7')">7</button>
+      <button onclick="append('8')">8</button>
+      <button onclick="append('9')">9</button>
+      <button class="operator" onclick="append('/')">÷</button>
+      <button onclick="append('4')">4</button>
+      <button onclick="append('5')">5</button>
+      <button onclick="append('6')">6</button>
+      <button class="operator" onclick="append('*')">×</button>
+      <button onclick="append('1')">1</button>
+      <button onclick="append('2')">2</button>
+      <button onclick="append('3')">3</button>
+      <button class="operator" onclick="append('-')">–</button>
+      <button onclick="append('0')">0</button>
+      <button onclick="append('.')">.</button>
+      <button class="clear" onclick="clearDisplay()">C</button>
+      <button class="operator" onclick="append('+')">+</button>
+      <button class="equals" onclick="calculate()">=</button>
+    </div>
+  </div>
+  <script>
+    function append(val) {
+      const display = document.getElementById('display');
+      display.value += val;
+    }
+    function clearDisplay() {
+      document.getElementById('display').value = '';
+    }
+    function calculate() {
+      const display = document.getElementById('display');
+      try {
+        display.value = eval(display.value);
+      } catch {
+        display.value = "Error";
+      }
+    }
+  </script>
+</body>
+</html>
